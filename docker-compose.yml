@@ -1,0 +1,20 @@
+services:
+  phone-gallery:
+    image: ghcr.io/r9r-dev/phone-gallery:latest
+    container_name: phone-gallery-app
+    build:
+      context: .
+      dockerfile: Dockerfile
+    ports:
+      - "3000:3000"
+    environment:
+      - NODE_ENV=production
+      - PORT=3000
+      - HOSTNAME=0.0.0.0
+    restart: unless-stopped
+    networks:
+      - phone-gallery-network
+
+networks:
+  phone-gallery-network:
+    driver: bridge
