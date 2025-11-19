@@ -5,6 +5,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Badge } from "@/components/ui/badge";
+import { FileUpload } from "@/components/ui/file-upload";
 import { Loader2, Plus, Pencil, Trash2, Save, X } from "lucide-react";
 import type { Phone } from "@/types/phone";
 import { ThemeProvider } from "next-themes";
@@ -50,7 +51,7 @@ export default function AdminPage() {
       yearEnd: null,
       kept: false,
       liked: true,
-      image: '/phones/',
+      image: '',
     });
   }
 
@@ -192,13 +193,11 @@ export default function AdminPage() {
                     placeholder="Leave empty if still using"
                   />
                 </div>
-                <div>
-                  <label className="text-sm font-medium mb-2 block">Image Path</label>
-                  <Input
+                <div className="md:col-span-2">
+                  <label className="text-sm font-medium mb-2 block">Phone Image</label>
+                  <FileUpload
                     value={formData.image || ''}
-                    onChange={(e) => setFormData({ ...formData, image: e.target.value })}
-                    className="glass"
-                    placeholder="/phones/phone-name.jpg"
+                    onChange={(value) => setFormData({ ...formData, image: value })}
                   />
                 </div>
                 <div className="flex gap-4 items-end">

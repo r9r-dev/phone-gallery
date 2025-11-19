@@ -76,13 +76,13 @@ body {
     --popover: 220 20% 10%;
     --popover-foreground: 210 40% 98%;
     --primary: 189 94% 55%;
-    --primary-foreground: 220 26% 6%;
+    --primary-foreground: 210 40% 98%;
     --secondary: 270 95% 75%;
-    --secondary-foreground: 220 26% 6%;
+    --secondary-foreground: 210 40% 98%;
     --muted: 220 15% 20%;
     --muted-foreground: 220 8% 60%;
     --accent: 328 85% 65%;
-    --accent-foreground: 220 26% 6%;
+    --accent-foreground: 210 40% 98%;
     --destructive: 0 84.2% 60.2%;
     --destructive-foreground: 210 40% 98%;
     --border: 220 15% 20%;

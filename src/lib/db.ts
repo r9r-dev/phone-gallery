@@ -37,6 +37,17 @@ function initializeDatabase() {
     CREATE INDEX IF NOT EXISTS idx_phones_year_start ON phones(year_start);
     CREATE INDEX IF NOT EXISTS idx_phones_year_end ON phones(year_end);
   `);
+
+  // Migration: Add image_data column for base64 images if it doesn't exist
+  const hasImageData = db.prepare(`
+    SELECT COUNT(*) as count
+    FROM pragma_table_info('phones')
+    WHERE name = 'image_data'
+  `).get() as { count: number };
+
+  if (hasImageData.count === 0) {
+    db.exec(`ALTER TABLE phones ADD COLUMN image_data TEXT;`);
+  }
 }
 
 // Run initialization
