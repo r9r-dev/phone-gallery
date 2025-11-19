@@ -1,20 +1,46 @@
 "use client";
 
-import { useMemo } from "react";
+import { useState, useEffect, useMemo } from "react";
 import { Badge } from "@/components/ui/badge";
+import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader } from "@/components/ui/card";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { Heart, Smartphone, ThumbsDown, ThumbsUp } from "lucide-react";
+import { Heart, Smartphone, ThumbsDown, ThumbsUp, Loader2, Settings } from "lucide-react";
 import Image from "next/image";
+import Link from "next/link";
 import { ThemeToggle } from "./theme-toggle";
 import { ThemeProvider } from "next-themes";
 import { PhoneStatistics } from "./phone-statistics";
-import { phones } from "./phones";
 import type { Phone } from "@/types/phone";
 
 export type { Phone };
 
 export default function PhoneGallery() {
+  const [phones, setPhones] = useState<Phone[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
+
+  // Fetch phones from API
+  useEffect(() => {
+    async function fetchPhones() {
+      try {
+        const response = await fetch('/api/phones');
+        if (!response.ok) {
+          throw new Error('Failed to fetch phones');
+        }
+        const data = await response.json();
+        setPhones(data);
+      } catch (err) {
+        setError(err instanceof Error ? err.message : 'An error occurred');
+        console.error('Error fetching phones:', err);
+      } finally {
+        setLoading(false);
+      }
+    }
+
+    fetchPhones();
+  }, []);
+
   // Sort phones from most recent to oldest (memoized to avoid recomputation)
   const sortedPhones = useMemo(() => {
     return [...phones].sort((a, b) => {
@@ -22,7 +48,35 @@ export default function PhoneGallery() {
       const bEndYear = b.yearEnd || new Date().getFullYear();
       return bEndYear - aEndYear || b.yearStart - a.yearStart;
     });
-  }, []);
+  }, [phones]);
+
+  // Loading state
+  if (loading) {
+    return (
+      <ThemeProvider attribute="class" defaultTheme="system" enableSystem>
+        <div className="container mx-auto p-4 md:p-8 flex items-center justify-center min-h-screen">
+          <div className="flex flex-col items-center gap-4">
+            <Loader2 className="w-12 h-12 animate-spin text-cyan-400" />
+            <p className="text-muted-foreground">Loading phone gallery...</p>
+          </div>
+        </div>
+      </ThemeProvider>
+    );
+  }
+
+  // Error state
+  if (error) {
+    return (
+      <ThemeProvider attribute="class" defaultTheme="system" enableSystem>
+        <div className="container mx-auto p-4 md:p-8 flex items-center justify-center min-h-screen">
+          <div className="glass p-8 rounded-lg max-w-md text-center">
+            <h2 className="text-2xl font-bold text-pink-400 mb-4">Error</h2>
+            <p className="text-muted-foreground">{error}</p>
+          </div>
+        </div>
+      </ThemeProvider>
+    );
+  }
 
   return (
     <ThemeProvider attribute="class" defaultTheme="system" enableSystem>
@@ -34,7 +88,15 @@ export default function PhoneGallery() {
             </h1>
             <p className="text-muted-foreground mt-2">A journey through mobile history</p>
           </div>
-          <ThemeToggle />
+          <div className="flex gap-4">
+            <Link href="/admin">
+              <Button variant="outline" className="glass hover:glass-strong hover:neon-purple">
+                <Settings className="w-4 h-4 mr-2" />
+                Admin
+              </Button>
+            </Link>
+            <ThemeToggle />
+          </div>
         </div>
         <Tabs defaultValue="gallery" className="space-y-6">
           <TabsList className="glass">

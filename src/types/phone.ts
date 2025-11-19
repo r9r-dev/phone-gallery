@@ -1,4 +1,5 @@
 export type Phone = {
+  id?: number;
   brand: string;
   name: string;
   yearStart: number;
@@ -6,4 +7,6 @@ export type Phone = {
   kept: boolean;
   liked: boolean;
   image: string;
+  createdAt?: string;
+  updatedAt?: string;
 };
