@@ -7,13 +7,20 @@ services:
       dockerfile: Dockerfile
     ports:
       - "3000:3000"
+    volumes:
+      - phone-data:/app/data
     environment:
       - NODE_ENV=production
       - PORT=3000
       - HOSTNAME=0.0.0.0
+      - DB_PATH=/app/data/phones.db
     restart: unless-stopped
     networks:
       - phone-gallery-network
+
+volumes:
+  phone-data:
+    driver: local
 
 networks:
   phone-gallery-network:

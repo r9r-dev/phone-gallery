@@ -1,0 +1,14 @@
+node_modules
+npm-debug.log
+.next
+.git
+.gitignore
+README.md
+.env*.local
+.vscode
+.idea
+*.md
+!CLAUDE.md
+src/data/*.db
+src/data/*.db-shm
+src/data/*.db-wal

@@ -4,7 +4,7 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 ## Project Overview
 
-This is a Next.js 14 application that displays a personal phone history gallery. The application shows a collection of phones owned over time with metadata including ownership dates, preferences (liked/disliked), and whether they were kept. It features a gallery view and a statistics dashboard.
+This is a Next.js 14 application that displays a personal phone history gallery with SQLite database backend. The application shows a collection of phones owned over time with metadata including ownership dates, preferences (liked/disliked), and whether they were kept. It features a gallery view, statistics dashboard, and an admin interface for managing phones.
 
 ## Development Commands
 
@@ -53,10 +53,18 @@ The application follows a single-page architecture with two main views (tabs):
 
 ### Key Components
 
+**Frontend:**
 - `src/app/page.tsx` - Entry point that renders PhoneGallery
+- `src/app/admin/page.tsx` - Admin interface for CRUD operations
 - `src/components/phone-gallery.tsx` - Main component managing tabs, theme provider, and orchestrating child components
-- `src/components/phones.tsx` - Data source: exports the `phones` array with all phone records
 - `src/components/phone-statistics.tsx` - Statistics calculations and dashboard UI
+- `src/components/phones.tsx` - Legacy hardcoded data (used for initial DB migration)
+
+**Backend:**
+- `src/lib/db.ts` - SQLite database connection and schema initialization
+- `src/lib/migrate-data.ts` - Automatic data migration script
+- `src/app/api/phones/route.ts` - API endpoints for listing and creating phones
+- `src/app/api/phones/[id]/route.ts` - API endpoints for get/update/delete by ID
 
 ### Data Model
 
@@ -94,12 +102,72 @@ Uses shadcn/ui components built on Radix UI:
 
 Phone images are stored in `src/public/phones/` and referenced with paths like `/phones/phone-name.jpg` in the data.
 
+## Database
+
+### SQLite Database
+
+The application uses SQLite for data persistence:
+- Database file: `src/data/phones.db`
+- Library: `better-sqlite3`
+- Auto-migration: Data from `src/components/phones.tsx` is automatically migrated to DB on first API call
+
+### Database Schema
+
+```sql
+CREATE TABLE phones (
+  id INTEGER PRIMARY KEY AUTOINCREMENT,
+  brand TEXT NOT NULL,
+  name TEXT NOT NULL,
+  year_start INTEGER NOT NULL,
+  year_end INTEGER,
+  kept BOOLEAN NOT NULL DEFAULT 0,
+  liked BOOLEAN NOT NULL DEFAULT 1,
+  image TEXT NOT NULL,
+  created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+  updated_at DATETIME DEFAULT CURRENT_TIMESTAMP
+);
+```
+
+### API Routes
+
+- `GET /api/phones` - List all phones
+- `POST /api/phones` - Create a new phone
+- `GET /api/phones/[id]` - Get a specific phone
+- `PUT /api/phones/[id]` - Update a phone
+- `DELETE /api/phones/[id]` - Delete a phone
+
+## Admin Interface
+
+Access the admin panel at `/admin` to:
+- Add new phones to the collection
+- Edit existing phone details
+- Delete phones from the database
+- View all phones in a list format
+
+The admin interface uses the same glassmorphism design as the main gallery.
+
 ## Adding New Phones
 
-To add a new phone to the gallery:
+Two methods to add phones:
 
+### Method 1: Admin Interface (Recommended)
+1. Navigate to `/admin`
+2. Click "Add New Phone"
+3. Fill in the form with phone details
+4. Add the phone image to `src/public/phones/` first
+5. Reference the image path (e.g., `/phones/phone-name.jpg`)
+6. Click "Save"
+
+### Method 2: Direct Database/Code
 1. Add the phone image to `src/public/phones/`
-2. Add a new entry to the `phones` array in `src/components/phones.tsx`
-3. Follow the existing data structure with all required fields
+2. Add entry to `src/components/phones.tsx` (will be migrated on restart)
+3. Or directly insert into the database file
 
-The gallery automatically sorts phones by `yearEnd` (or current year if null), then by `yearStart`.
+## Docker Volumes
+
+When running with Docker, the SQLite database is persisted in a named volume:
+- Volume name: `phone-data`
+- Mount point: `/app/data`
+- Database path in container: `/app/data/phones.db`
+
+This ensures data persists across container restarts and rebuilds.
