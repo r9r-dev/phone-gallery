@@ -108,7 +108,11 @@ export default function PhoneGallery() {
               {sortedPhones.map((phone) => (
                 <Card
                   key={`${phone.brand}-${phone.name}-${phone.yearStart}`}
-                  className="overflow-hidden flex flex-col glass hover:glass-strong transition-all duration-300 hover:scale-[1.02] hover:neon-cyan"
+                  className={`overflow-hidden flex flex-col transition-all duration-300 hover:scale-[1.02] ${
+                    phone.liked
+                      ? 'glass-liked hover:glass-liked-strong hover:neon-green'
+                      : 'glass-disliked hover:glass-disliked-strong hover:neon-red'
+                  }`}
                 >
                   <CardHeader className="p-4 md:p-6">
                     <h2 className="text-xl font-bold uppercase tracking-wider bg-gradient-to-r from-cyan-400 to-purple-400 bg-clip-text text-transparent">
@@ -137,9 +141,9 @@ export default function PhoneGallery() {
                           <span className="text-muted-foreground">Owned:</span> {phone.yearStart} - {phone.yearEnd || "Present"}
                         </p>
                         {phone.liked ? (
-                          <ThumbsUp className="w-5 h-5 text-cyan-400" />
+                          <ThumbsUp className="w-5 h-5 text-green-400" />
                         ) : (
-                          <ThumbsDown className="w-5 h-5 text-pink-400" />
+                          <ThumbsDown className="w-5 h-5 text-red-400" />
                         )}
                       </div>
                       <div className="flex flex-wrap gap-2">
