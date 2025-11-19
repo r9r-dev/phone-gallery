@@ -48,6 +48,59 @@ function initializeDatabase() {
   if (hasImageData.count === 0) {
     db.exec(`ALTER TABLE phones ADD COLUMN image_data TEXT;`);
   }
+
+  // Migration: Add detailed specification columns
+  const columns = [
+    'review TEXT',
+    'network_technology TEXT',
+    'launch_date_international TEXT',
+    'launch_date_france TEXT',
+    'dimensions TEXT',
+    'weight TEXT',
+    'sim TEXT',
+    'display_type TEXT',
+    'display_size TEXT',
+    'display_resolution TEXT',
+    'display_protection TEXT',
+    'os TEXT',
+    'os_version TEXT',
+    'chipset TEXT',
+    'cpu TEXT',
+    'gpu TEXT',
+    'internal_memory TEXT',
+    'ram TEXT',
+    'main_camera_specs TEXT',
+    'main_camera_video TEXT',
+    'selfie_camera_specs TEXT',
+    'selfie_camera_video TEXT',
+    'speakers TEXT',
+    'jack_35mm TEXT',
+    'wlan TEXT',
+    'bluetooth TEXT',
+    'positioning TEXT',
+    'nfc TEXT',
+    'infrared_port TEXT',
+    'radio TEXT',
+    'usb TEXT',
+    'sensors TEXT',
+    'battery_type TEXT',
+    'battery_capacity TEXT',
+    'my_phone_color TEXT',
+    'my_phone_storage TEXT'
+  ];
+
+  for (const column of columns) {
+    const columnName = column.split(' ')[0];
+    const hasColumn = db.prepare(`
+      SELECT COUNT(*) as count
+      FROM pragma_table_info('phones')
+      WHERE name = ?
+    `).get(columnName) as { count: number };
+
+    if (hasColumn.count === 0) {
+      db.exec(`ALTER TABLE phones ADD COLUMN ${column};`);
+    }
+  }
 }
 
 // Run initialization

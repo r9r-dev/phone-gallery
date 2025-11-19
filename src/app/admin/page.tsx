@@ -4,12 +4,12 @@ import { useState, useEffect } from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
+import { Textarea } from "@/components/ui/textarea";
 import { Badge } from "@/components/ui/badge";
 import { FileUpload } from "@/components/ui/file-upload";
 import { Loader2, Plus, Pencil, Trash2, Save, X } from "lucide-react";
 import type { Phone } from "@/types/phone";
 import { ThemeProvider } from "next-themes";
-import { ThemeToggle } from "@/components/theme-toggle";
 import { LanguageToggle } from "@/components/language-toggle";
 import { LanguageProvider, useLanguage } from "@/contexts/language-context";
 import Link from "next/link";
@@ -135,7 +135,6 @@ function AdminPageContent() {
                 Back to Gallery
               </Button>
             </Link>
-            <ThemeToggle />
           </div>
         </div>
 
@@ -201,6 +200,7 @@ function AdminPageContent() {
                   <FileUpload
                     value={formData.image || ''}
                     onChange={(value) => setFormData({ ...formData, image: value })}
+                    className="glass"
                   />
                 </div>
                 <div className="flex gap-4 items-end">
@@ -222,6 +222,425 @@ function AdminPageContent() {
                     />
                     <span className="text-sm">Still Own It</span>
                   </label>
+                </div>
+
+                {/* Review Section */}
+                <div className="md:col-span-2">
+                  <h3 className="text-lg font-semibold bg-gradient-to-r from-cyan-400 to-purple-400 bg-clip-text text-transparent mb-3">
+                    {t('myReview')}
+                  </h3>
+                  <Textarea
+                    value={formData.review || ''}
+                    onChange={(e) => setFormData({ ...formData, review: e.target.value })}
+                    className="glass min-h-[100px]"
+                    placeholder="Your review of this phone..."
+                  />
+                </div>
+
+                {/* Network Section */}
+                <div className="md:col-span-2">
+                  <h3 className="text-lg font-semibold bg-gradient-to-r from-cyan-400 to-purple-400 bg-clip-text text-transparent mb-3">
+                    {t('network')}
+                  </h3>
+                </div>
+                <div className="md:col-span-2">
+                  <label className="text-sm font-medium mb-2 block">{t('networkTechnology')}</label>
+                  <Input
+                    value={formData.networkTechnology || ''}
+                    onChange={(e) => setFormData({ ...formData, networkTechnology: e.target.value })}
+                    className="glass"
+                    placeholder="GSM / CDMA / HSPA / LTE / 5G"
+                  />
+                </div>
+
+                {/* Launch Section */}
+                <div className="md:col-span-2">
+                  <h3 className="text-lg font-semibold bg-gradient-to-r from-cyan-400 to-purple-400 bg-clip-text text-transparent mb-3">
+                    {t('launch')}
+                  </h3>
+                </div>
+                <div>
+                  <label className="text-sm font-medium mb-2 block">{t('launchDateInternational')}</label>
+                  <Input
+                    value={formData.launchDateInternational || ''}
+                    onChange={(e) => setFormData({ ...formData, launchDateInternational: e.target.value })}
+                    className="glass"
+                    placeholder="2024, September"
+                  />
+                </div>
+                <div>
+                  <label className="text-sm font-medium mb-2 block">{t('launchDateFrance')}</label>
+                  <Input
+                    value={formData.launchDateFrance || ''}
+                    onChange={(e) => setFormData({ ...formData, launchDateFrance: e.target.value })}
+                    className="glass"
+                    placeholder="2024, October"
+                  />
+                </div>
+
+                {/* Body Section */}
+                <div className="md:col-span-2">
+                  <h3 className="text-lg font-semibold bg-gradient-to-r from-cyan-400 to-purple-400 bg-clip-text text-transparent mb-3">
+                    {t('body')}
+                  </h3>
+                </div>
+                <div>
+                  <label className="text-sm font-medium mb-2 block">{t('dimensions')}</label>
+                  <Input
+                    value={formData.dimensions || ''}
+                    onChange={(e) => setFormData({ ...formData, dimensions: e.target.value })}
+                    className="glass"
+                    placeholder="159.9 x 76.7 x 8.3 mm"
+                  />
+                </div>
+                <div>
+                  <label className="text-sm font-medium mb-2 block">{t('weight')}</label>
+                  <Input
+                    value={formData.weight || ''}
+                    onChange={(e) => setFormData({ ...formData, weight: e.target.value })}
+                    className="glass"
+                    placeholder="227 g"
+                  />
+                </div>
+                <div className="md:col-span-2">
+                  <label className="text-sm font-medium mb-2 block">{t('sim')}</label>
+                  <Input
+                    value={formData.sim || ''}
+                    onChange={(e) => setFormData({ ...formData, sim: e.target.value })}
+                    className="glass"
+                    placeholder="Nano-SIM and eSIM"
+                  />
+                </div>
+
+                {/* Display Section */}
+                <div className="md:col-span-2">
+                  <h3 className="text-lg font-semibold bg-gradient-to-r from-cyan-400 to-purple-400 bg-clip-text text-transparent mb-3">
+                    {t('display')}
+                  </h3>
+                </div>
+                <div>
+                  <label className="text-sm font-medium mb-2 block">{t('displayType')}</label>
+                  <Input
+                    value={formData.displayType || ''}
+                    onChange={(e) => setFormData({ ...formData, displayType: e.target.value })}
+                    className="glass"
+                    placeholder="LTPO Super Retina XDR OLED"
+                  />
+                </div>
+                <div>
+                  <label className="text-sm font-medium mb-2 block">{t('displaySize')}</label>
+                  <Input
+                    value={formData.displaySize || ''}
+                    onChange={(e) => setFormData({ ...formData, displaySize: e.target.value })}
+                    className="glass"
+                    placeholder="6.3 inches"
+                  />
+                </div>
+                <div>
+                  <label className="text-sm font-medium mb-2 block">{t('displayResolution')}</label>
+                  <Input
+                    value={formData.displayResolution || ''}
+                    onChange={(e) => setFormData({ ...formData, displayResolution: e.target.value })}
+                    className="glass"
+                    placeholder="1206 x 2622 pixels"
+                  />
+                </div>
+                <div>
+                  <label className="text-sm font-medium mb-2 block">{t('displayProtection')}</label>
+                  <Input
+                    value={formData.displayProtection || ''}
+                    onChange={(e) => setFormData({ ...formData, displayProtection: e.target.value })}
+                    className="glass"
+                    placeholder="Ceramic Shield glass"
+                  />
+                </div>
+
+                {/* Platform Section */}
+                <div className="md:col-span-2">
+                  <h3 className="text-lg font-semibold bg-gradient-to-r from-cyan-400 to-purple-400 bg-clip-text text-transparent mb-3">
+                    {t('platform')}
+                  </h3>
+                </div>
+                <div>
+                  <label className="text-sm font-medium mb-2 block">{t('os')}</label>
+                  <Input
+                    value={formData.os || ''}
+                    onChange={(e) => setFormData({ ...formData, os: e.target.value })}
+                    className="glass"
+                    placeholder="iOS"
+                  />
+                </div>
+                <div>
+                  <label className="text-sm font-medium mb-2 block">{t('osVersion')}</label>
+                  <Input
+                    value={formData.osVersion || ''}
+                    onChange={(e) => setFormData({ ...formData, osVersion: e.target.value })}
+                    className="glass"
+                    placeholder="18"
+                  />
+                </div>
+                <div>
+                  <label className="text-sm font-medium mb-2 block">{t('chipset')}</label>
+                  <Input
+                    value={formData.chipset || ''}
+                    onChange={(e) => setFormData({ ...formData, chipset: e.target.value })}
+                    className="glass"
+                    placeholder="Apple A18 Pro (3 nm)"
+                  />
+                </div>
+                <div>
+                  <label className="text-sm font-medium mb-2 block">{t('cpu')}</label>
+                  <Input
+                    value={formData.cpu || ''}
+                    onChange={(e) => setFormData({ ...formData, cpu: e.target.value })}
+                    className="glass"
+                    placeholder="Hexa-core"
+                  />
+                </div>
+                <div className="md:col-span-2">
+                  <label className="text-sm font-medium mb-2 block">{t('gpu')}</label>
+                  <Input
+                    value={formData.gpu || ''}
+                    onChange={(e) => setFormData({ ...formData, gpu: e.target.value })}
+                    className="glass"
+                    placeholder="Apple GPU (6-core graphics)"
+                  />
+                </div>
+
+                {/* Memory Section */}
+                <div className="md:col-span-2">
+                  <h3 className="text-lg font-semibold bg-gradient-to-r from-cyan-400 to-purple-400 bg-clip-text text-transparent mb-3">
+                    {t('memory')}
+                  </h3>
+                </div>
+                <div>
+                  <label className="text-sm font-medium mb-2 block">{t('internalMemory')}</label>
+                  <Input
+                    value={formData.internalMemory || ''}
+                    onChange={(e) => setFormData({ ...formData, internalMemory: e.target.value })}
+                    className="glass"
+                    placeholder="256GB, 512GB, 1TB"
+                  />
+                </div>
+                <div>
+                  <label className="text-sm font-medium mb-2 block">{t('ram')}</label>
+                  <Input
+                    value={formData.ram || ''}
+                    onChange={(e) => setFormData({ ...formData, ram: e.target.value })}
+                    className="glass"
+                    placeholder="8GB"
+                  />
+                </div>
+
+                {/* Main Camera Section */}
+                <div className="md:col-span-2">
+                  <h3 className="text-lg font-semibold bg-gradient-to-r from-cyan-400 to-purple-400 bg-clip-text text-transparent mb-3">
+                    {t('mainCamera')}
+                  </h3>
+                </div>
+                <div className="md:col-span-2">
+                  <label className="text-sm font-medium mb-2 block">{t('cameraSpecs')}</label>
+                  <Textarea
+                    value={formData.mainCameraSpecs || ''}
+                    onChange={(e) => setFormData({ ...formData, mainCameraSpecs: e.target.value })}
+                    className="glass"
+                    placeholder="48 MP (wide), 48 MP (ultrawide), 12 MP (telephoto)"
+                  />
+                </div>
+                <div className="md:col-span-2">
+                  <label className="text-sm font-medium mb-2 block">{t('cameraVideo')}</label>
+                  <Input
+                    value={formData.mainCameraVideo || ''}
+                    onChange={(e) => setFormData({ ...formData, mainCameraVideo: e.target.value })}
+                    className="glass"
+                    placeholder="4K@24/25/30/60fps, 1080p@25/30/60/120/240fps"
+                  />
+                </div>
+
+                {/* Selfie Camera Section */}
+                <div className="md:col-span-2">
+                  <h3 className="text-lg font-semibold bg-gradient-to-r from-cyan-400 to-purple-400 bg-clip-text text-transparent mb-3">
+                    {t('selfieCamera')}
+                  </h3>
+                </div>
+                <div className="md:col-span-2">
+                  <label className="text-sm font-medium mb-2 block">{t('cameraSpecs')}</label>
+                  <Input
+                    value={formData.selfieCameraSpecs || ''}
+                    onChange={(e) => setFormData({ ...formData, selfieCameraSpecs: e.target.value })}
+                    className="glass"
+                    placeholder="12 MP (wide)"
+                  />
+                </div>
+                <div className="md:col-span-2">
+                  <label className="text-sm font-medium mb-2 block">{t('cameraVideo')}</label>
+                  <Input
+                    value={formData.selfieCameraVideo || ''}
+                    onChange={(e) => setFormData({ ...formData, selfieCameraVideo: e.target.value })}
+                    className="glass"
+                    placeholder="4K@24/25/30/60fps, 1080p@25/30/60/120fps"
+                  />
+                </div>
+
+                {/* Sound Section */}
+                <div className="md:col-span-2">
+                  <h3 className="text-lg font-semibold bg-gradient-to-r from-cyan-400 to-purple-400 bg-clip-text text-transparent mb-3">
+                    {t('sound')}
+                  </h3>
+                </div>
+                <div>
+                  <label className="text-sm font-medium mb-2 block">{t('speakers')}</label>
+                  <Input
+                    value={formData.speakers || ''}
+                    onChange={(e) => setFormData({ ...formData, speakers: e.target.value })}
+                    className="glass"
+                    placeholder="Stereo speakers"
+                  />
+                </div>
+                <div>
+                  <label className="text-sm font-medium mb-2 block">{t('jack35mm')}</label>
+                  <Input
+                    value={formData.jack35mm || ''}
+                    onChange={(e) => setFormData({ ...formData, jack35mm: e.target.value })}
+                    className="glass"
+                    placeholder="No"
+                  />
+                </div>
+
+                {/* Communication Section */}
+                <div className="md:col-span-2">
+                  <h3 className="text-lg font-semibold bg-gradient-to-r from-cyan-400 to-purple-400 bg-clip-text text-transparent mb-3">
+                    {t('communication')}
+                  </h3>
+                </div>
+                <div>
+                  <label className="text-sm font-medium mb-2 block">{t('wlan')}</label>
+                  <Input
+                    value={formData.wlan || ''}
+                    onChange={(e) => setFormData({ ...formData, wlan: e.target.value })}
+                    className="glass"
+                    placeholder="Wi-Fi 802.11 a/b/g/n/ac/6e/7"
+                  />
+                </div>
+                <div>
+                  <label className="text-sm font-medium mb-2 block">{t('bluetooth')}</label>
+                  <Input
+                    value={formData.bluetooth || ''}
+                    onChange={(e) => setFormData({ ...formData, bluetooth: e.target.value })}
+                    className="glass"
+                    placeholder="5.3, A2DP, LE"
+                  />
+                </div>
+                <div>
+                  <label className="text-sm font-medium mb-2 block">{t('positioning')}</label>
+                  <Input
+                    value={formData.positioning || ''}
+                    onChange={(e) => setFormData({ ...formData, positioning: e.target.value })}
+                    className="glass"
+                    placeholder="GPS, GLONASS, GALILEO, QZSS, BDS"
+                  />
+                </div>
+                <div>
+                  <label className="text-sm font-medium mb-2 block">{t('nfc')}</label>
+                  <Input
+                    value={formData.nfc || ''}
+                    onChange={(e) => setFormData({ ...formData, nfc: e.target.value })}
+                    className="glass"
+                    placeholder="Yes"
+                  />
+                </div>
+                <div>
+                  <label className="text-sm font-medium mb-2 block">{t('infraredPort')}</label>
+                  <Input
+                    value={formData.infraredPort || ''}
+                    onChange={(e) => setFormData({ ...formData, infraredPort: e.target.value })}
+                    className="glass"
+                    placeholder="No"
+                  />
+                </div>
+                <div>
+                  <label className="text-sm font-medium mb-2 block">{t('radio')}</label>
+                  <Input
+                    value={formData.radio || ''}
+                    onChange={(e) => setFormData({ ...formData, radio: e.target.value })}
+                    className="glass"
+                    placeholder="No"
+                  />
+                </div>
+                <div className="md:col-span-2">
+                  <label className="text-sm font-medium mb-2 block">{t('usb')}</label>
+                  <Input
+                    value={formData.usb || ''}
+                    onChange={(e) => setFormData({ ...formData, usb: e.target.value })}
+                    className="glass"
+                    placeholder="USB Type-C 3.2 Gen 2"
+                  />
+                </div>
+
+                {/* Features Section */}
+                <div className="md:col-span-2">
+                  <h3 className="text-lg font-semibold bg-gradient-to-r from-cyan-400 to-purple-400 bg-clip-text text-transparent mb-3">
+                    {t('features')}
+                  </h3>
+                </div>
+                <div className="md:col-span-2">
+                  <label className="text-sm font-medium mb-2 block">{t('sensors')}</label>
+                  <Input
+                    value={formData.sensors || ''}
+                    onChange={(e) => setFormData({ ...formData, sensors: e.target.value })}
+                    className="glass"
+                    placeholder="Face ID, accelerometer, gyro, proximity, compass, barometer"
+                  />
+                </div>
+
+                {/* Battery Section */}
+                <div className="md:col-span-2">
+                  <h3 className="text-lg font-semibold bg-gradient-to-r from-cyan-400 to-purple-400 bg-clip-text text-transparent mb-3">
+                    {t('battery')}
+                  </h3>
+                </div>
+                <div>
+                  <label className="text-sm font-medium mb-2 block">{t('batteryType')}</label>
+                  <Input
+                    value={formData.batteryType || ''}
+                    onChange={(e) => setFormData({ ...formData, batteryType: e.target.value })}
+                    className="glass"
+                    placeholder="Li-Ion"
+                  />
+                </div>
+                <div>
+                  <label className="text-sm font-medium mb-2 block">{t('batteryCapacity')}</label>
+                  <Input
+                    value={formData.batteryCapacity || ''}
+                    onChange={(e) => setFormData({ ...formData, batteryCapacity: e.target.value })}
+                    className="glass"
+                    placeholder="3582 mAh"
+                  />
+                </div>
+
+                {/* My Phone Section */}
+                <div className="md:col-span-2">
+                  <h3 className="text-lg font-semibold bg-gradient-to-r from-cyan-400 to-purple-400 bg-clip-text text-transparent mb-3">
+                    {t('myPhone')}
+                  </h3>
+                </div>
+                <div>
+                  <label className="text-sm font-medium mb-2 block">{t('color')}</label>
+                  <Input
+                    value={formData.myPhoneColor || ''}
+                    onChange={(e) => setFormData({ ...formData, myPhoneColor: e.target.value })}
+                    className="glass"
+                    placeholder="Black Titanium"
+                  />
+                </div>
+                <div>
+                  <label className="text-sm font-medium mb-2 block">{t('storage')}</label>
+                  <Input
+                    value={formData.myPhoneStorage || ''}
+                    onChange={(e) => setFormData({ ...formData, myPhoneStorage: e.target.value })}
+                    className="glass"
+                    placeholder="256GB"
+                  />
                 </div>
               </div>
               <div className="flex gap-2">
@@ -283,5 +702,13 @@ function AdminPageContent() {
         </div>
       </div>
     </ThemeProvider>
+  );
+}
+
+export default function AdminPage() {
+  return (
+    <LanguageProvider>
+      <AdminPageContent />
+    </LanguageProvider>
   );
 }

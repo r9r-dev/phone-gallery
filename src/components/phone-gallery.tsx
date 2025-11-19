@@ -8,12 +8,16 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Heart, Smartphone, ThumbsDown, ThumbsUp, Loader2, Settings } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
-import { ThemeToggle } from "./theme-toggle";
 import { LanguageToggle } from "./language-toggle";
 import { ThemeProvider } from "next-themes";
 import { LanguageProvider, useLanguage } from "@/contexts/language-context";
 import { PhoneStatistics } from "./phone-statistics";
 import type { Phone } from "@/types/phone";
+import dynamic from 'next/dynamic';
+
+const PhoneDetail = dynamic(() => import('./phone-detail').then(mod => mod.PhoneDetail), {
+  ssr: false
+});
 
 export type { Phone };
 
@@ -22,6 +26,8 @@ function PhoneGalleryContent() {
   const [phones, setPhones] = useState<Phone[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+  const [selectedPhone, setSelectedPhone] = useState<Phone | null>(null);
+  const [detailOpen, setDetailOpen] = useState(false);
 
   // Fetch phones from API
   useEffect(() => {
@@ -99,7 +105,6 @@ function PhoneGalleryContent() {
               </Button>
             </Link>
             <LanguageToggle />
-            <ThemeToggle />
           </div>
         </div>
         <Tabs defaultValue="gallery" className="space-y-6">
@@ -112,11 +117,15 @@ function PhoneGalleryContent() {
               {sortedPhones.map((phone) => (
                 <Card
                   key={`${phone.brand}-${phone.name}-${phone.yearStart}`}
-                  className={`overflow-hidden flex flex-col transition-all duration-300 hover:scale-[1.02] ${
+                  className={`overflow-hidden flex flex-col transition-all duration-300 hover:scale-[1.02] cursor-pointer ${
                     phone.liked
                       ? 'glass-liked hover:glass-liked-strong hover:neon-green'
                       : 'glass-disliked hover:glass-disliked-strong hover:neon-red'
                   }`}
+                  onClick={() => {
+                    setSelectedPhone(phone);
+                    setDetailOpen(true);
+                  }}
                 >
                   <CardHeader className="p-4 md:p-6">
                     <h2 className="text-xl font-bold uppercase tracking-wider bg-gradient-to-r from-cyan-400 to-purple-400 bg-clip-text text-transparent">
@@ -180,6 +189,11 @@ function PhoneGalleryContent() {
             <PhoneStatistics phones={phones} />
           </TabsContent>
         </Tabs>
+        <PhoneDetail
+          phone={selectedPhone}
+          open={detailOpen}
+          onOpenChange={setDetailOpen}
+        />
       </div>
     </ThemeProvider>
   );
