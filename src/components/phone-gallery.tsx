@@ -26,66 +26,76 @@ export default function PhoneGallery() {
 
   return (
     <ThemeProvider attribute="class" defaultTheme="system" enableSystem>
-      <div className="container mx-auto p-4">
-        <div className="flex justify-between items-center mb-6">
-          <h1 className="text-3xl font-bold">My Phone History</h1>
+      <div className="container mx-auto p-4 md:p-8">
+        <div className="flex justify-between items-center mb-8 md:mb-12">
+          <div>
+            <h1 className="text-4xl md:text-5xl font-bold bg-gradient-to-r from-cyan-400 via-purple-400 to-pink-400 bg-clip-text text-transparent">
+              Phone Gallery
+            </h1>
+            <p className="text-muted-foreground mt-2">A journey through mobile history</p>
+          </div>
           <ThemeToggle />
         </div>
-        <Tabs defaultValue="gallery" className="space-y-4">
-          <TabsList>
+        <Tabs defaultValue="gallery" className="space-y-6">
+          <TabsList className="glass">
             <TabsTrigger value="gallery">Gallery</TabsTrigger>
             <TabsTrigger value="stats">Facts & Trends</TabsTrigger>
           </TabsList>
           <TabsContent value="gallery" className="space-y-4">
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
               {sortedPhones.map((phone) => (
-                <Card key={`${phone.brand}-${phone.name}-${phone.yearStart}`} className="overflow-hidden flex flex-col">
-                  <CardHeader className="p-4">
-                    <h2 className="text-lg font-bold uppercase">
+                <Card
+                  key={`${phone.brand}-${phone.name}-${phone.yearStart}`}
+                  className="overflow-hidden flex flex-col glass hover:glass-strong transition-all duration-300 hover:scale-[1.02] hover:neon-cyan"
+                >
+                  <CardHeader className="p-4 md:p-6">
+                    <h2 className="text-xl font-bold uppercase tracking-wider bg-gradient-to-r from-cyan-400 to-purple-400 bg-clip-text text-transparent">
                       {phone.brand}
                     </h2>
-                    <p className="text-sm text-muted-foreground">
+                    <p className="text-sm text-muted-foreground font-medium">
                       {phone.name}
                     </p>
                   </CardHeader>
-                  <CardContent className="p-4 flex-grow flex flex-col">
+                  <CardContent className="p-4 md:p-6 flex-grow flex flex-col">
                     <div className="flex justify-center mb-4">
-                      <Image
-                        src={phone.image}
-                        alt={`${phone.brand} ${phone.name}`}
-                        width={150}
-                        height={150}
-                        className="rounded-md"
-                      />
+                      <div className="relative">
+                        <Image
+                          src={phone.image}
+                          alt={`${phone.brand} ${phone.name}`}
+                          width={150}
+                          height={150}
+                          className="rounded-lg transition-transform duration-300 hover:scale-105"
+                        />
+                        <div className="absolute inset-0 bg-gradient-to-t from-background/20 to-transparent rounded-lg pointer-events-none"></div>
+                      </div>
                     </div>
-                    <div className="mt-auto">
-                      <div className="flex justify-between items-center mb-2">
-                        <p className="text-sm">
-                          Owned: {phone.yearStart} -{" "}
-                          {phone.yearEnd || "Present"}
+                    <div className="mt-auto space-y-3">
+                      <div className="flex justify-between items-center">
+                        <p className="text-sm font-medium">
+                          <span className="text-muted-foreground">Owned:</span> {phone.yearStart} - {phone.yearEnd || "Present"}
                         </p>
                         {phone.liked ? (
-                          <ThumbsUp className="w-5 h-5 text-green-500" />
+                          <ThumbsUp className="w-5 h-5 text-cyan-400" />
                         ) : (
-                          <ThumbsDown className="w-5 h-5 text-red-500" />
+                          <ThumbsDown className="w-5 h-5 text-pink-400" />
                         )}
                       </div>
                       <div className="flex flex-wrap gap-2">
                         {phone.yearEnd === null && (
                           <Badge
                             variant="secondary"
-                            className="flex items-center space-x-1"
+                            className="flex items-center space-x-1 glass border-cyan-400/30"
                           >
-                            <Smartphone className="w-3 h-3" />
+                            <Smartphone className="w-3 h-3 text-cyan-400" />
                             <span>Current</span>
                           </Badge>
                         )}
                         {phone.kept && (
                           <Badge
                             variant="outline"
-                            className="flex items-center space-x-1"
+                            className="flex items-center space-x-1 glass border-pink-400/30"
                           >
-                            <Heart className="w-3 h-3" />
+                            <Heart className="w-3 h-3 text-pink-400" />
                             <span>Kept</span>
                           </Badge>
                         )}
