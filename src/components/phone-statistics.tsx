@@ -1,60 +1,82 @@
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Phone, ThumbsDown, ThumbsUp } from "lucide-react";
+"use client";
 
-type PhoneData = {
-  brand: string;
-  name: string;
-  yearStart: number;
-  yearEnd: number | null;
-  kept: boolean;
-  liked: boolean;
-  image: string;
-};
+import { useMemo } from "react";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Phone as PhoneIcon, ThumbsDown, ThumbsUp } from "lucide-react";
+import type { Phone } from "@/types/phone";
 
 type BrandCount = {
   [key: string]: number;
 };
 
 type Props = {
-  phones: PhoneData[];
+  phones: Phone[];
 };
 
 export function PhoneStatistics({ phones }: Props) {
-  const totalPhones = phones.length;
-  const phonesStillOwned = phones.filter((phone) => phone.kept).length;
-  const totalLikes = phones.filter((phone) => phone.liked).length;
-  const totalDislikes = phones.filter((phone) => !phone.liked).length;
+  const statistics = useMemo(() => {
+    const totalPhones = phones.length;
+    const phonesStillOwned = phones.filter((phone) => phone.kept).length;
+    const totalLikes = phones.filter((phone) => phone.liked).length;
+    const totalDislikes = phones.filter((phone) => !phone.liked).length;
 
-  const brandCounts: BrandCount = phones.reduce((acc, phone) => {
-    acc[phone.brand] = (acc[phone.brand] || 0) + 1;
-    return acc;
-  }, {} as BrandCount);
-
-  const brandLikes: BrandCount = phones.reduce((acc, phone) => {
-    if (phone.liked) {
+    const brandCounts: BrandCount = phones.reduce((acc, phone) => {
       acc[phone.brand] = (acc[phone.brand] || 0) + 1;
-    }
-    return acc;
-  }, {} as BrandCount);
+      return acc;
+    }, {} as BrandCount);
 
-  const brandDislikes: BrandCount = phones.reduce((acc, phone) => {
-    if (!phone.liked) {
-      acc[phone.brand] = (acc[phone.brand] || 0) + 1;
-    }
-    return acc;
-  }, {} as BrandCount);
+    const brandLikes: BrandCount = phones.reduce((acc, phone) => {
+      if (phone.liked) {
+        acc[phone.brand] = (acc[phone.brand] || 0) + 1;
+      }
+      return acc;
+    }, {} as BrandCount);
 
-  const mostLikedBrand = Object.entries(brandLikes).reduce((a, b) =>
-    a[1] > b[1] ? a : b
-  );
-  const mostDislikedBrand = Object.entries(brandDislikes).reduce((a, b) =>
-    a[1] > b[1] ? a : b
-  );
+    const brandDislikes: BrandCount = phones.reduce((acc, phone) => {
+      if (!phone.liked) {
+        acc[phone.brand] = (acc[phone.brand] || 0) + 1;
+      }
+      return acc;
+    }, {} as BrandCount);
 
-  const sortedBrandCounts = Object.entries(brandCounts).sort(
-    (a, b) => b[1] - a[1]
-  );
-  const maxCount = sortedBrandCounts[0][1];
+    const brandLikesEntries = Object.entries(brandLikes);
+    const brandDislikesEntries = Object.entries(brandDislikes);
+
+    const mostLikedBrand = brandLikesEntries.length > 0
+      ? brandLikesEntries.reduce((a, b) => (a[1] > b[1] ? a : b))
+      : null;
+
+    const mostDislikedBrand = brandDislikesEntries.length > 0
+      ? brandDislikesEntries.reduce((a, b) => (a[1] > b[1] ? a : b))
+      : null;
+
+    const sortedBrandCounts = Object.entries(brandCounts).sort(
+      (a, b) => b[1] - a[1]
+    );
+    const maxCount = sortedBrandCounts.length > 0 ? sortedBrandCounts[0][1] : 1;
+
+    return {
+      totalPhones,
+      phonesStillOwned,
+      totalLikes,
+      totalDislikes,
+      sortedBrandCounts,
+      maxCount,
+      mostLikedBrand,
+      mostDislikedBrand,
+    };
+  }, [phones]);
+
+  const {
+    totalPhones,
+    phonesStillOwned,
+    totalLikes,
+    totalDislikes,
+    sortedBrandCounts,
+    maxCount,
+    mostLikedBrand,
+    mostDislikedBrand,
+  } = statistics;
 
   return (
     <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
@@ -63,7 +85,7 @@ export function PhoneStatistics({ phones }: Props) {
           <CardTitle className="text-sm font-medium">
             Total Phones Owned
           </CardTitle>
-          <Phone className="h-4 w-4 text-muted-foreground" />
+          <PhoneIcon className="h-4 w-4 text-muted-foreground" />
         </CardHeader>
         <CardContent>
           <div className="text-2xl font-bold">{totalPhones}</div>
@@ -74,7 +96,7 @@ export function PhoneStatistics({ phones }: Props) {
           <CardTitle className="text-sm font-medium">
             Phones Still Owned
           </CardTitle>
-          <Phone className="h-4 w-4 text-muted-foreground" />
+          <PhoneIcon className="h-4 w-4 text-muted-foreground" />
         </CardHeader>
         <CardContent>
           <div className="text-2xl font-bold">{phonesStillOwned}</div>
@@ -130,15 +152,27 @@ export function PhoneStatistics({ phones }: Props) {
             <div className="flex justify-between items-center">
               <span>Most Liked Brand:</span>
               <span className="font-medium">
-                <span className="text-green-500">{mostLikedBrand[0]}</span>
-                <span className="ml-2">({mostLikedBrand[1]})</span>
+                {mostLikedBrand ? (
+                  <>
+                    <span className="text-green-500">{mostLikedBrand[0]}</span>
+                    <span className="ml-2">({mostLikedBrand[1]})</span>
+                  </>
+                ) : (
+                  <span className="text-muted-foreground">N/A</span>
+                )}
               </span>
             </div>
             <div className="flex justify-between items-center">
               <span>Most Disliked Brand:</span>
               <span className="font-medium">
-                <span className="text-red-500">{mostDislikedBrand[0]}</span>
-                <span className="ml-2">({mostDislikedBrand[1]})</span>
+                {mostDislikedBrand ? (
+                  <>
+                    <span className="text-red-500">{mostDislikedBrand[0]}</span>
+                    <span className="ml-2">({mostDislikedBrand[1]})</span>
+                  </>
+                ) : (
+                  <span className="text-muted-foreground">N/A</span>
+                )}
               </span>
             </div>
           </div>

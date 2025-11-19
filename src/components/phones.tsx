@@ -1,5 +1,4 @@
-"use client";
-import { Phone } from "./phone-gallery";
+import type { Phone } from "@/types/phone";
 
 export const phones: Phone[] = [
   {

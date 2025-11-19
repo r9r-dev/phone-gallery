@@ -1,5 +1,6 @@
 "use client";
 
+import { useMemo } from "react";
 import { Badge } from "@/components/ui/badge";
 import { Card, CardContent, CardHeader } from "@/components/ui/card";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
@@ -9,24 +10,19 @@ import { ThemeToggle } from "./theme-toggle";
 import { ThemeProvider } from "next-themes";
 import { PhoneStatistics } from "./phone-statistics";
 import { phones } from "./phones";
+import type { Phone } from "@/types/phone";
 
-export type Phone = {
-  brand: string;
-  name: string;
-  yearStart: number;
-  yearEnd: number | null;
-  kept: boolean;
-  liked: boolean;
-  image: string;
-};
+export type { Phone };
 
 export default function PhoneGallery() {
-  // Sort phones from most recent to oldest
-  const sortedPhones = [...phones].sort((a, b) => {
-    const aEndYear = a.yearEnd || new Date().getFullYear();
-    const bEndYear = b.yearEnd || new Date().getFullYear();
-    return bEndYear - aEndYear || b.yearStart - a.yearStart;
-  });
+  // Sort phones from most recent to oldest (memoized to avoid recomputation)
+  const sortedPhones = useMemo(() => {
+    return [...phones].sort((a, b) => {
+      const aEndYear = a.yearEnd || new Date().getFullYear();
+      const bEndYear = b.yearEnd || new Date().getFullYear();
+      return bEndYear - aEndYear || b.yearStart - a.yearStart;
+    });
+  }, []);
 
   return (
     <ThemeProvider attribute="class" defaultTheme="system" enableSystem>
@@ -42,8 +38,8 @@ export default function PhoneGallery() {
           </TabsList>
           <TabsContent value="gallery" className="space-y-4">
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-              {sortedPhones.map((phone, index) => (
-                <Card key={index} className="overflow-hidden flex flex-col">
+              {sortedPhones.map((phone) => (
+                <Card key={`${phone.brand}-${phone.name}-${phone.yearStart}`} className="overflow-hidden flex flex-col">
                   <CardHeader className="p-4">
                     <h2 className="text-lg font-bold uppercase">
                       {phone.brand}

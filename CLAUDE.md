@@ -60,7 +60,7 @@ The application follows a single-page architecture with two main views (tabs):
 
 ### Data Model
 
-The `Phone` type (defined in `phone-gallery.tsx:13-21`):
+The `Phone` type (defined in `src/types/phone.ts`):
 ```typescript
 {
   brand: string;
@@ -72,6 +72,8 @@ The `Phone` type (defined in `phone-gallery.tsx:13-21`):
   image: string;           // path to image in /public/phones/
 }
 ```
+
+All phone data is stored in `src/components/phones.tsx` as a typed array.
 
 ### UI Component Library
 
@@ -85,7 +87,7 @@ Uses shadcn/ui components built on Radix UI:
 
 - Tailwind CSS with custom configuration (`src/tailwind.config.ts`)
 - HSL-based color system using CSS variables
-- Path alias `@/*` maps to `src/*` (configured in `tsconfig.json:20-22`)
+- Path alias `@/*` maps to `src/*` root (configured in `tsconfig.json:20-22`)
 - Dark mode: class-based with ThemeProvider component
 
 ### Static Assets
