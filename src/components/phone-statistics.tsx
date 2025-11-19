@@ -4,6 +4,7 @@ import { useMemo } from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Phone as PhoneIcon, ThumbsDown, ThumbsUp } from "lucide-react";
 import type { Phone } from "@/types/phone";
+import { useLanguage } from "@/contexts/language-context";
 
 type BrandCount = {
   [key: string]: number;
@@ -14,6 +15,7 @@ type Props = {
 };
 
 export function PhoneStatistics({ phones }: Props) {
+  const { t } = useLanguage();
   const statistics = useMemo(() => {
     const totalPhones = phones.length;
     const phonesStillOwned = phones.filter((phone) => phone.kept).length;
@@ -83,7 +85,7 @@ export function PhoneStatistics({ phones }: Props) {
       <Card className="glass hover:glass-strong transition-all hover:neon-cyan">
         <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
           <CardTitle className="text-sm font-medium">
-            Total Phones Owned
+            {t('totalPhones')}
           </CardTitle>
           <PhoneIcon className="h-4 w-4 text-cyan-400" />
         </CardHeader>
@@ -94,7 +96,7 @@ export function PhoneStatistics({ phones }: Props) {
       <Card className="glass hover:glass-strong transition-all hover:neon-purple">
         <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
           <CardTitle className="text-sm font-medium">
-            Phones Still Owned
+            {t('phonesKept')}
           </CardTitle>
           <PhoneIcon className="h-4 w-4 text-purple-400" />
         </CardHeader>
@@ -104,7 +106,7 @@ export function PhoneStatistics({ phones }: Props) {
       </Card>
       <Card className="glass hover:glass-strong transition-all hover:neon-cyan">
         <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-          <CardTitle className="text-sm font-medium">Total Likes</CardTitle>
+          <CardTitle className="text-sm font-medium">{t('likedPhones')}</CardTitle>
           <ThumbsUp className="h-4 w-4 text-cyan-400" />
         </CardHeader>
         <CardContent>
@@ -113,7 +115,7 @@ export function PhoneStatistics({ phones }: Props) {
       </Card>
       <Card className="glass hover:glass-strong transition-all hover:neon-pink">
         <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-          <CardTitle className="text-sm font-medium">Total Dislikes</CardTitle>
+          <CardTitle className="text-sm font-medium">{t('dislikedPhones')}</CardTitle>
           <ThumbsDown className="h-4 w-4 text-pink-400" />
         </CardHeader>
         <CardContent>
@@ -122,7 +124,7 @@ export function PhoneStatistics({ phones }: Props) {
       </Card>
       <Card className="col-span-full glass hover:glass-strong transition-all">
         <CardHeader>
-          <CardTitle className="bg-gradient-to-r from-cyan-400 via-purple-400 to-pink-400 bg-clip-text text-transparent">Phones by Brand</CardTitle>
+          <CardTitle className="bg-gradient-to-r from-cyan-400 via-purple-400 to-pink-400 bg-clip-text text-transparent">{t('brandDistribution')}</CardTitle>
         </CardHeader>
         <CardContent>
           <div className="space-y-3">
@@ -147,12 +149,12 @@ export function PhoneStatistics({ phones }: Props) {
       </Card>
       <Card className="col-span-full md:col-span-1 glass hover:glass-strong transition-all">
         <CardHeader>
-          <CardTitle>Brand Preferences</CardTitle>
+          <CardTitle>{t('preferences')}</CardTitle>
         </CardHeader>
         <CardContent>
           <div className="space-y-4">
             <div className="flex justify-between items-center p-3 rounded-lg glass">
-              <span className="text-sm">Most Liked Brand:</span>
+              <span className="text-sm">{t('mostLikedBrand')} :</span>
               <span className="font-bold">
                 {mostLikedBrand ? (
                   <>
@@ -165,7 +167,7 @@ export function PhoneStatistics({ phones }: Props) {
               </span>
             </div>
             <div className="flex justify-between items-center p-3 rounded-lg glass">
-              <span className="text-sm">Most Disliked Brand:</span>
+              <span className="text-sm">{t('mostDislikedBrand')} :</span>
               <span className="font-bold">
                 {mostDislikedBrand ? (
                   <>

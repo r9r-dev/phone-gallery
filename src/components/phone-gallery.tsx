@@ -9,13 +9,16 @@ import { Heart, Smartphone, ThumbsDown, ThumbsUp, Loader2, Settings } from "luci
 import Image from "next/image";
 import Link from "next/link";
 import { ThemeToggle } from "./theme-toggle";
+import { LanguageToggle } from "./language-toggle";
 import { ThemeProvider } from "next-themes";
+import { LanguageProvider, useLanguage } from "@/contexts/language-context";
 import { PhoneStatistics } from "./phone-statistics";
 import type { Phone } from "@/types/phone";
 
 export type { Phone };
 
-export default function PhoneGallery() {
+function PhoneGalleryContent() {
+  const { t } = useLanguage();
   const [phones, setPhones] = useState<Phone[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
@@ -57,7 +60,7 @@ export default function PhoneGallery() {
         <div className="container mx-auto p-4 md:p-8 flex items-center justify-center min-h-screen">
           <div className="flex flex-col items-center gap-4">
             <Loader2 className="w-12 h-12 animate-spin text-cyan-400" />
-            <p className="text-muted-foreground">Loading phone gallery...</p>
+            <p className="text-muted-foreground">{t('loading')}</p>
           </div>
         </div>
       </ThemeProvider>
@@ -70,7 +73,7 @@ export default function PhoneGallery() {
       <ThemeProvider attribute="class" defaultTheme="system" enableSystem>
         <div className="container mx-auto p-4 md:p-8 flex items-center justify-center min-h-screen">
           <div className="glass p-8 rounded-lg max-w-md text-center">
-            <h2 className="text-2xl font-bold text-pink-400 mb-4">Error</h2>
+            <h2 className="text-2xl font-bold text-pink-400 mb-4">{t('error')}</h2>
             <p className="text-muted-foreground">{error}</p>
           </div>
         </div>
@@ -84,24 +87,25 @@ export default function PhoneGallery() {
         <div className="flex justify-between items-center mb-8 md:mb-12">
           <div>
             <h1 className="text-4xl md:text-5xl font-bold bg-gradient-to-r from-cyan-400 via-purple-400 to-pink-400 bg-clip-text text-transparent">
-              Phone Gallery
+              {t('title')}
             </h1>
-            <p className="text-muted-foreground mt-2">A journey through mobile history</p>
+            <p className="text-muted-foreground mt-2">{t('subtitle')}</p>
           </div>
           <div className="flex gap-4">
             <Link href="/admin">
               <Button variant="outline" className="glass hover:glass-strong hover:neon-purple">
                 <Settings className="w-4 h-4 mr-2" />
-                Admin
+                {t('admin')}
               </Button>
             </Link>
+            <LanguageToggle />
             <ThemeToggle />
           </div>
         </div>
         <Tabs defaultValue="gallery" className="space-y-6">
           <TabsList className="glass">
-            <TabsTrigger value="gallery">Gallery</TabsTrigger>
-            <TabsTrigger value="stats">Facts & Trends</TabsTrigger>
+            <TabsTrigger value="gallery">{t('gallery')}</TabsTrigger>
+            <TabsTrigger value="stats">{t('stats')}</TabsTrigger>
           </TabsList>
           <TabsContent value="gallery" className="space-y-4">
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
@@ -138,7 +142,7 @@ export default function PhoneGallery() {
                     <div className="mt-auto space-y-3">
                       <div className="flex justify-between items-center">
                         <p className="text-sm font-medium">
-                          <span className="text-muted-foreground">Owned:</span> {phone.yearStart} - {phone.yearEnd || "Present"}
+                          <span className="text-muted-foreground">{t('owned')} :</span> {phone.yearStart} - {phone.yearEnd || t('present')}
                         </p>
                         {phone.liked ? (
                           <ThumbsUp className="w-5 h-5 text-green-400" />
@@ -153,7 +157,7 @@ export default function PhoneGallery() {
                             className="flex items-center space-x-1 glass border-cyan-400/30"
                           >
                             <Smartphone className="w-3 h-3 text-cyan-400" />
-                            <span>Current</span>
+                            <span>{t('current')}</span>
                           </Badge>
                         )}
                         {phone.kept && (
@@ -162,7 +166,7 @@ export default function PhoneGallery() {
                             className="flex items-center space-x-1 glass border-pink-400/30"
                           >
                             <Heart className="w-3 h-3 text-pink-400" />
-                            <span>Kept</span>
+                            <span>{t('kept')}</span>
                           </Badge>
                         )}
                       </div>
@@ -178,5 +182,13 @@ export default function PhoneGallery() {
         </Tabs>
       </div>
     </ThemeProvider>
+  );
+}
+
+export default function PhoneGallery() {
+  return (
+    <LanguageProvider>
+      <PhoneGalleryContent />
+    </LanguageProvider>
   );
 }

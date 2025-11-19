@@ -10,9 +10,12 @@ import { Loader2, Plus, Pencil, Trash2, Save, X } from "lucide-react";
 import type { Phone } from "@/types/phone";
 import { ThemeProvider } from "next-themes";
 import { ThemeToggle } from "@/components/theme-toggle";
+import { LanguageToggle } from "@/components/language-toggle";
+import { LanguageProvider, useLanguage } from "@/contexts/language-context";
 import Link from "next/link";
 
-export default function AdminPage() {
+function AdminPageContent() {
+  const { t } = useLanguage();
   const [phones, setPhones] = useState<Phone[]>([]);
   const [loading, setLoading] = useState(true);
   const [editingId, setEditingId] = useState<number | null>(null);
@@ -86,7 +89,7 @@ export default function AdminPage() {
   }
 
   async function handleDelete(id: number) {
-    if (!confirm('Are you sure you want to delete this phone?')) return;
+    if (!confirm(t('deleteConfirm'))) return;
 
     try {
       const response = await fetch(`/api/phones/${id}`, {
